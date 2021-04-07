@@ -1,4 +1,4 @@
-# Sync Demogrpahic Data from EveryAction
+# Sync Demographic Data from EveryAction
 
 EveryAction does not include race and gender in their commercial Pipeline sync. Sunrise engineered a custom sync to bring in demographic data to our Redshift warehouse. Our sync brings in gender, race, as well as some other custom fields. You can modify this script to bring in any custom fields you desire. 
 

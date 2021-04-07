@@ -58,10 +58,6 @@ result_dict['dob'] = []
 result_dict['race'] = []
 result_dict['gender'] = []
 result_dict['class'] = []
-result_dict['hub'] = []
-result_dict['hub_role'] = []
-result_dict['secondary_hub_role'] = []
-result_dict['other_hub_role'] = []
 result_dict['active'] = []
 
 # Creating empty lists where we will log successes and errors
@@ -101,10 +97,6 @@ for person in list_vanid:
         result_dict['gender'].append(gender_list)
 
         result_dict['class'].append([item for item in response['customFields'] if item["customFieldId"] == 19][0]['assignedValue'])
-        result_dict['hub'].append([item for item in response['customFields'] if item["customFieldId"] == 12][0]['assignedValue'])
-        result_dict['hub_role'].append([item for item in response['customFields'] if item["customFieldId"] == 7][0]['assignedValue'])
-        result_dict['secondary_hub_role'].append([item for item in response['customFields'] if item["customFieldId"] == 8][0]['assignedValue'])
-        result_dict['other_hub_role'].append([item for item in response['customFields'] if item["customFieldId"] == 9][0]['assignedValue'])
         result_dict['active'].append([item for item in response['customFields'] if item["customFieldId"] == 6][0]['assignedValue'])
       
     # If the update succeeds it will append - we put relevant info into the successes log
@@ -135,35 +127,18 @@ result_df['gender'] = result_df['gender'].apply(lambda x: ','.join(map(str, x)))
 
 # create a list of available values for each demogrpahic var using Parsons van.get_custom_field() 
 active_list = ea.get_custom_field(6)['availableValues']
-hub_role_list = ea.get_custom_field(7)['availableValues']
-secondary_hub_role_list = ea.get_custom_field(8)['availableValues']
-hub_list = ea.get_custom_field(12)['availableValues']
 class_list = ea.get_custom_field(19)['availableValues']
 
 # convert list to dictionary to map to dataframe - 
 #this separates the custome fields in their own lists
-hub_dict = {}
-for d in hub_list:
-    hub_dict[str(d['id'])] = d['name']
 
 class_dict = {}
 for d in class_list:
     class_dict[str(d['id'])] = d['name']
 
-hub_role_dict = {}
-for d in hub_role_list:
-    hub_role_dict[str(d['id'])] = d['name']
-
-secondary_hub_role_dict = {}
-for d in secondary_hub_role_list:
-    secondary_hub_role_dict[str(d['id'])] = d['name']
-
 
 # map values of class, hub, and hub role to dataframe
 result_df['class'].replace(class_dict, inplace = True)
-result_df['hub'].replace(hub_dict, inplace = True)
-result_df['hub_role'].replace(hub_role_dict, inplace = True)
-result_df['secondary_hub_role'].replace(secondary_hub_role_dict, inplace = True)
 result_df['date_updated'] = date.today()
 
 result_df = result_df.where(pd.notnull(result_df), None)
@@ -171,7 +146,7 @@ result_df = result_df.replace({'None': None})
 result_df = result_df.replace({np.nan: None})
 
 # col order same as civis
-result_df= result_df[['vanid', 'dob', 'race', 'gender', 'class', 'hub', 'hub_role', 'secondary_hub_role', 'active', 'date_updated', 'other_hub_role']]
+result_df= result_df[['vanid', 'dob', 'race', 'gender', 'class', 'active', 'date_updated']]
 
 # Overwrite EA abckend terms with Sunrise's preferred front end terms
 # Asian -> Asian/Asian American

@@ -8,7 +8,7 @@ This project assumes that:
 * You're using EveryAction
 * You're using Redshift
 * You have a Parsons VAN API key
-* You'll need to modify the script in this repo to suit your needs. Namely, the schema of your choice and any other custom fields.
+* You are able to modify the script in this repo to suit your needs. Namely, the schema of your choice and the addition of any other custom fields.
 * You're using the modified race terms as defined [here](https://github.com/sunrisedatadept/code_library/blob/main/everyaction/change_gender_and_race_terms.js)
 
 ## Scripts

@@ -57,7 +57,6 @@ result_dict['vanid'] = []
 result_dict['dob'] = []
 result_dict['race'] = []
 result_dict['gender'] = []
-result_dict['class'] = []
 result_dict['active'] = []
 
 # Creating empty lists where we will log successes and errors
@@ -96,7 +95,6 @@ for person in list_vanid:
             gender_list.append(None)
         result_dict['gender'].append(gender_list)
 
-        result_dict['class'].append([item for item in response['customFields'] if item["customFieldId"] == 19][0]['assignedValue'])
         result_dict['active'].append([item for item in response['customFields'] if item["customFieldId"] == 6][0]['assignedValue'])
       
     # If the update succeeds it will append - we put relevant info into the successes log
@@ -127,18 +125,7 @@ result_df['gender'] = result_df['gender'].apply(lambda x: ','.join(map(str, x)))
 
 # create a list of available values for each demogrpahic var using Parsons van.get_custom_field() 
 active_list = ea.get_custom_field(6)['availableValues']
-class_list = ea.get_custom_field(19)['availableValues']
 
-# convert list to dictionary to map to dataframe - 
-#this separates the custome fields in their own lists
-
-class_dict = {}
-for d in class_list:
-    class_dict[str(d['id'])] = d['name']
-
-
-# map values of class, hub, and hub role to dataframe
-result_df['class'].replace(class_dict, inplace = True)
 result_df['date_updated'] = date.today()
 
 result_df = result_df.where(pd.notnull(result_df), None)
@@ -146,7 +133,7 @@ result_df = result_df.replace({'None': None})
 result_df = result_df.replace({np.nan: None})
 
 # col order same as civis
-result_df= result_df[['vanid', 'dob', 'race', 'gender', 'class', 'active', 'date_updated']]
+result_df= result_df[['vanid', 'dob', 'race', 'gender', 'active', 'date_updated']]
 
 # Overwrite EA abckend terms with Sunrise's preferred front end terms
 # Asian -> Asian/Asian American
